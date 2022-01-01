@@ -1,0 +1,14 @@
+@import '../../../styles.scss';
+
+.container{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.btn{
+    @include flex;
+
+    background-color: var(--btn-bg-color);
+    color: var(--btn-txt-color)
+}
+
