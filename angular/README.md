@@ -1,6 +1,6 @@
-# Angular
+# 부모 <-> 자식  data binding
 
-1. 부모 자식 컴포넌트 데이터 전달 **@Input(), @Ouput()** 데코레이더 활용
+1. 부모에서 자식 컴포넌트로 데이터 전달 **@Input()** 데코레이더 활용
 
    ```typescript
    // 자식 컴포넌트
@@ -11,12 +11,12 @@
      template: `
        <div>
          <div>child Input Data</div>
-         <div>{{ getData }}</div>
+         <div>{{ setData }}</div>
        </div>
      `,
    })
    export class ChildComponent implements OnInit {
-     @Input() getData: string;
+     @Input() setData: string;
    
      constructor() {}
      ngOnInit(): void {}
@@ -31,11 +31,73 @@
      selector: 'app-home',
      template: `
        <div>
-         <app-child-directive getData="넘겨준데이터"></app-child-directive>
+         <app-child-directive [setData]="parentsData"></app-child-directive>
        </div>
      `,
    })
    export class HomeComponent implements OnInit {
+     parentsData: '넘겨준데이터';
+     
+     constructor() {}
+     ngOnInit(): void {}
+   }
+   ```
+
+   
+
+   **[ ] ** 를 사용하지 사용하지 않은 위의 " 넘겨준데이터 " 는 property 값으로 취급하지 않고 문자열로 취급한다.
+
+   
+
+2. 자식에서 부모 컴포넌트로 데이터 전달 **@Output()** 데코레이더 활용
+
+   ```typescript
+   // 자식컴포넌트
+   import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+   
+   @Component({
+     selector: 'app-child-directive',
+     template: `
+       <div>
+         <input type="text" #childData />
+         <button (click)="onClick(childData.value)">클릭</button>
+       </div>
+     `,
+   })
+   export class ChildComponent implements OnInit {
+     @Output() getData = new EventEmitter<string>();
+   
+     onClick(value: string) {
+       this.getData.emit(value);
+     }
+   
+     constructor() {}
+     ngOnInit(): void {}
+   }
+   ```
+
+   ```typescript
+   // 부모 컴포넌트
+   import { Component, OnInit } from '@angular/core';
+   
+   @Component({
+     selector: 'app-home',
+     template: `
+       <div>
+         <app-child-directive
+           (getData)="onClickChildData($event)"
+         ></app-child-directive>
+         <div>{{ getFromChildData }}</div>
+       </div>
+     `,
+   })
+   export class HomeComponent implements OnInit {
+     getFromChildData: string = '';
+   
+     onClickChildData(value: string) {
+       this.getFromChildData = value;
+     }
+   
      constructor() {}
      ngOnInit(): void {}
    }
