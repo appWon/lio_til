@@ -102,3 +102,27 @@
      ngOnInit(): void {}
    }
    ```
+
+   # HostListener
+
+```typescript
+import { Component, HostListener } from '@angular/core';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+})
+export class HomeComponent {
+  @HostListener('click')
+  clicked() {
+    console.log('this component');
+  }
+
+  @HostListener('document:click')
+  docunent() {
+    console.log('document');
+  }
+}
+```
+
+Angular 에서 **EventListener**를 사용하고 싶을 때! **HostListener** 를 사용하면 된다. **EventListener** 처럼 component가 사라질 때 일일이 제거하지 않아도 **HostListener** 를 사용하면 자동적으로 메모리에서 제거를 시켜준다.
