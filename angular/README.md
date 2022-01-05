@@ -103,7 +103,7 @@
    }
    ```
 
-   # HostListener
+# HostListener
 
 ```typescript
 import { Component, HostListener } from '@angular/core';
