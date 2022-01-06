@@ -1,50 +1,88 @@
 # javascript
 
-자바스크립트 Prototype 기반 언어이다.
+자바스크립트 Prototype 기반 언어라고.. 합니다.
 
-> 프로토타입 기반의 언어는 객체를 class 상속과는 다르게 원형을 복제를 하는 방식으로 재사용할 수 있게 한다.
+> 프로토타입 기반 언어는 클래스 기반 언어에서 상속을 사용하는 것과는 다르게, 객체를 원형(프로토타입)으로 하는 복제 과정을 통해 객체의 동작 방식을 재사용 할 수 있게 한다.
 
-프로토타입은 프로토타입 링크와 오브젝트로 설명을 할 수가 있다.
 
-#### 프로토타입 객체
 
-자바스크립트에서 **원시타입** 인,  문자, 숫자, 불리언, null, undefinded를 제외한 모든 타입은 객체이다.
+#### 프로토타입 체인?? 링크??
 
-```javascript
-typeof new Array // object
-typeof new Object// object
-```
+이런 어려운 단어가 많지만 간단하게 예제를 통해서 쉽게 설명해 보겠습니다.
 
- 간단히 출력을 해보면 object 를 출력하는 것을 알 수 있고, 객체의 생성은 함수로 생성이 된다.
-
-```javascript
-const obj = {}
-const obj = new Object()
-
-const arr = []
-const arr = new Array()
-```
-
-위 코드에서 함수를 이용해서 생성을 하지 않았다고 생각을 하여도, 자바스크립트 객체들은 함수를 통하여 생성이 된다.
-
-그렇다면 객체들도 함수를 통하여 생성이 된다면 대체 함수에서는 어떤 일이 발생할까??
-
-```javascript
-const arr = new Array()
-console.log(arr)
-// []
-// [[Prototype]]
-// map, fill, filter
-// ...
-```
-
-콘솔로그로 배열을 선언 했을 때 처럼 출력해보면  하나하나 펼쳐서 보면 정말 익숙한 단어들이 보일 것이다. 우리가 당연하게 생각하였고 그냥 막 사용하던 기능들이 Array 라는 함수에 미리 정의 되어 있었기 때문에 우리는 편하게 사용할 수 있었다.
-
-```javascript
+```typescript
 function user(){
 	this.name = 'lio'
+	this.age = 28
 }
 ```
 
+유저가 있는데 **name = lio** , **age = 28** 인 사람이 있습니다.
+
+````typescript
+const clone1 = new user()
+
+const clone2 = new user()
+````
+
+유저의 DNA를 이용하여 **clone1, clone2** 인간을 만들어 냅니다. 이 클론은 **user** 의 모든 정보를 가지고 있고, **prototype** 이라는것도 함께 생성을 합니다.
 
 
+
+이 **prototype**은 그냥 **유전자** 라고 생각을 해주세요. 왜?? 유전자라고 했는 이유를 알려드리겠습니다.
+
+````javascript
+clone1.birthday = '1월 18일'
+
+console.log(clone1.birthday) // 1월 18일
+console.log(clone2.birthday) // undefinded
+````
+
+위 코드 처럼 작성 후 출력하면, **clone1** 에서만 birthday가 출력하는 것을 볼 수 있습니다.
+
+이번에는 위의 코드를 작성하지 않은 상태에서 다시 아래의 코드를 작성해보겠습니다.
+
+````javascript
+clone1.prototype.birthday = '1월 18일'
+
+console.log(clone1.birthday) // 1월 18일
+console.log(clone2.birthday) // 1월 18일
+````
+
+**prototype** 이라는 유전자를 통해서 birthday를 추가를 하고 출력을 해보니 **모든 clone** 에서 birthday가 출력을 할 수 있었습니다.
+
+그리고 위의 상태에서 다시 **모든 클론** 을 출력해보겠습니다.
+
+````javascript
+console.log(clone1) // { name: lio, age: 28 }
+console.log(clone2) // { name: lio, age: 28 }
+
+console.log(clone1.birthday) // 1월 18일
+console.log(clone2.birthday) // 1월 18일
+````
+
+이제 먼가 감이 오시나요?? 자바스크립트에서 자식인 **clone** 에서 데이터가 없다면 부모 **유전자** 에게 접근해서 가지고 옵니다. 부모 **유전자** 에게 데이터가 없으면, 그의 부모  **유전자** 게도 또 물어보고 물어 보고 또 물어보고 부모가 유전자가 없을 때까지 계속 불어 봅니다. 이걸 **프로토타입 체인** 이라고 합니다.
+
+````javascript
+const 개발팀 = ['닐','엘린','제이크','두기','미미','알렉스','리오']
+const 개발팀 = new Array('닐','엘린','제이크','두기','미미','알렉스','리오')
+````
+
+위의 코드를 보면 **new Array()** 선언과 위의 **new user()** 선언 이 같다는 것을 느낄수 있습니다.
+
+여기서 생각할 수 있는 것은 Array 를 이용하여 배열을 만들었을 때 우리가 선언도 하지 않은 함수를 사용할 수 있다는 것 입니다.
+
+```javascript
+개발팀.map
+개발팀.filter
+개발팀.some
+등....
+
+console.log(new Array()) // 아래에 [[ Prototype ]] 확인
+```
+
+위의 코드처럼 우리가 선언 하지도 않은 함수는  **프로토타입 체인** 을 통해서 부모의 **유전자**를 통해서 가져와 사용하기 때문에 별도로 선언하지 않아도 사용할 수 있었습니다.
+
+
+
+이런식으로 **자바스크립트** 작동하기 때문에 자바스크립트는 **프로토타입** 기반 언어라고 합니다.
