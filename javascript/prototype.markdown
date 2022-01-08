@@ -38,7 +38,7 @@ console.log(clone1.birthday) // 1월 18일
 console.log(clone2.birthday) // undefinded
 ````
 
-위 코드 처럼 작성 후 출력하면, **clone1** 에서만 birthday가 출력하는 것을 볼 수 있습니다.
+위 코드처럼 작성 후 출력하면, **clone1** 에서만 birthday가 출력하는 것을 볼 수 있습니다.
 
 이번에는 위의 코드를 작성하지 않은 상태에서 다시 아래의 코드를 작성해보겠습니다.
 
